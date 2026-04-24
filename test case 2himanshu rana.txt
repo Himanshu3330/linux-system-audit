@@ -1,0 +1,39 @@
+Test Case 2 — File Permission Configuration
+
+Scenario: A web server requires a properly configured index.html file with specific ownership and access permissions.
+
+Tasks
+
+Navigate to your home directory and create a file named index.html.
+himanshu@find-me ~ % cd ~ && touch index.html
+
+Add any HTML text content to the file.
+himanshu@find-me ~ % echo "<html><body><h1>Hello, World!</h1></body></html>" > index.html
+zsh: event not found: </h1></body></html>
+himanshu@find-me ~ % echo '<html><body><h1>Hello, World!</h1></body></html>' > index.html
+
+Check the file's current default permissions.
+himanshu@find-me ~ % ls -l index.html
+-rw-r--r--  1 himanshu  staff  49 24 Apr 14:08 index.html
+
+Grant full permissions (read, write, execute) to all users on the file.
+himanshu@find-me ~ % chmod 777 index.html && ls -l index.html
+-rwxrwxrwx  1 himanshu  staff  49 24 Apr 14:08 index.html
+
+Change the file owner and group to www-data.
+himanshu@find-me ~ % sudo chown www-data:www-data index.html
+
+Change the file permissions to 755.
+himanshu@find-me ~ % sudo chmod 755 index.html
+
+Display the final permissions and ownership to verify the configuration.
+himanshu@find-me ~ % ls -l index.html
+-rwxr-xr-x  1 www-data  www-data  49 24 Apr 14:08 index.html
+
+Expected Outcome
+
+File index.html exists in the home directory with content.
+After step 4, permissions show rwxrwxrwx.
+After step 5, owner and group both show www-data.
+Final ls -l output shows:
+-rwxr-xr-x  1 www-data  www-data ... index.html

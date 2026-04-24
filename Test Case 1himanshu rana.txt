@@ -1,0 +1,60 @@
+Test Case 1 — Linux System Audit & User Management
+Scenario: You are a Linux system administrator onboarding new employees at a tech company. Complete the following tasks on your system.
+
+Tasks
+
+1. Check the identity of the currently logged-in user and display the username of the current session.
+himanshu@find-me ~ % whoami
+himanshu
+
+2. Check which users are currently logged into the system and what they are doing.
+himanshu@find-me ~ % who
+himanshu console Apr 24 08:14
+
+3. View the login history of the system.
+himanshu@find-me ~ % last
+himanshu console Fri Apr 24 08:13 still logged in
+reboot ~ Fri Apr 24 08:13
+himanshu console Thu Apr 23 10:15 - 18:42
+reboot ~ Thu Apr 23 10:14
+wtmp begins Mon Jan 3 08:50
+
+4. Display complete system information, the hostname, and how long the system has been running.
+himanshu@find-me ~ % uname -a
+Darwin find-me 24.4.0 Darwin Kernel Version 24.4.0 root:xnu-11417.101.15~117/RELEASE_ARM64_T8103 arm64
+himanshu@find-me ~ % hostname
+find-me
+himanshu@find-me ~ % uptime
+8:17 up 3 mins, 1 user, load averages: 0.02 0.05 0.02
+
+5. Create two groups: developers and qa. Verify both groups were successfully created and display the complete list of groups on the system.
+himanshu@find-me ~ % sudo dseditgroup -o create developers
+himanshu@find-me ~ % sudo dseditgroup -o create qa
+himanshu@find-me ~ % dscl . -list /Groups | grep -E 'developers|qa'
+developers
+qa
+
+6. Create the following users and assign each to their respective group:
+EmployeeDepartmentamandevelopersritudeveloperskaranqa
+himanshu@find-me ~ % sudo dscl . -create /Users/aman UniqueID 1004
+himanshu@find-me ~ % sudo dscl . -create /Users/aman PrimaryGroupID 1005
+himanshufind-me ~ % sudo dseditgroup -o edit -a aman -t user developers
+himanshu@find-me ~ % sudo dscl . -create /Users/ritu UniqueID 1005
+himanshu@find-me ~ % sudo dscl . -create /Users/ritu PrimaryGroupID 1006
+himanshu@find-me ~ % sudo dseditgroup -o edit -a ritu -t user developers
+himanshu@find-me ~ % sudo dscl . -create /Users/karan UniqueID 1003
+himanshu@find-me ~ % sudo dscl . -create /Users/karan PrimaryGroupID 1002
+himanshu@find-me ~ % sudo dseditgroup -o edit -a karan -t user qa
+himanshu@find-me ~ % id aman
+uid=1004(aman) gid=1005(aman) groups=1005(aman),1001(developers)
+himanshu@find-me ~ % id ritu
+uid=1005(ritu) gid=1006(ritu) groups=1006(ritu),1001(developers)
+himanshu@find-me ~ % id karan
+uid=1003(karan) gid=1002(hr) groups=1002(hr),1004(qa)
+
+7. Employee ritu has resigned. Ensure she has no active sessions, delete her account along with her home directory, and verify she no longer exists on the system.
+himanshu@find-me ~ % who | grep ritu
+himanshu@find-me ~ % sudo dscl . -delete /Users/ritu
+himanshu@find-me ~ % sudo rm -rf /Users/ritu
+himanshu@find-me ~ % id ritu
+id: ritu: no such user
